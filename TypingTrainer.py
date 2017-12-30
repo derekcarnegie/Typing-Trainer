@@ -1,6 +1,7 @@
 import random
 import string
 import tkinter as tk
+import time
 
 def init(data):
     data.startScreen = False
@@ -8,6 +9,7 @@ def init(data):
     data.correctWord = False
     data.playerStart = False
     data.AIStart = False
+    data.testStarted=False
     data.text = ""
     data.yMargin = range(200,700,200)
     data.xMargin = range(110,1000,130)
@@ -40,7 +42,6 @@ def init(data):
     data.indEasy = random.randint(0,len(data.easyWordChoices)-1)
     data.indMedium = random.randint(0,len(data.mediumWordChoices)-1)
     data.indHard = random.randint(0,len(data.hardWordChoices)-1)
-    data.testStarted=False
     data.counter = 0
 
 
@@ -48,6 +49,7 @@ def timerFired(data):
     data.time+=100
 
 def keyPressed(event,data):
+    print (event.keysym)
     pairs = [('bracketright',']'),('bracketleft','['),('period','.'),('comma',','),('colon',':'),('semicolon',';'),('quoteright',"'"),('quotedbl','"'),('backslash','\\'),('bar','|'),('question','?'),('less','<'),('greater','>'),('eclam','!'),('at','@'),('numbersign','#'),('dollar','$'),('percent','%'),('asciicircum','^'),('ampersand','&'),('asterisk','*'),('parenleft','('),('parenright',')'),('minus','-'),('equal','='),('underscore','_'),('plus','+')]
     convert = dict(pairs)
     #converting to human readable so characters can later be added to string
@@ -57,7 +59,7 @@ def keyPressed(event,data):
         if event.keysym=="Return":
             data.startScreen = True
     if data.playScreen == True and data.startScreen == True and data.timeRemaining>0 and data.currPlayerChoice == "1 Player":
-        if event.keysym == "space" and data.testStarted==True:
+        if event.keysym == "space" or event.keysym == "Return" and data.testStarted==True:
             if data.currOption == "Easy":
                 if data.playerString == data.easyWordChoices[data.indEasy]:
                     data.correct+=1
@@ -108,6 +110,19 @@ def mousePressed(event,data):
     if data.playScreen == True and data.startScreen == True:
         if 0<event.x<data.width*1/5 and 0<event.y<data.height*1/10:
             data.playScreen = False
+            data.timeRemaining = data.timeRemainingStart
+            data.correct = 0
+            data.wrong = 0
+            data.timeBeforeStart = 0
+            data.testStarted=False
+            data.counter = 0
+            data.playerString = ""
+            data.indEasy = random.randint(0,len(data.easyWordChoices)-1)
+            data.indMedium = random.randint(0,len(data.mediumWordChoices)-1)
+            data.indHard = random.randint(0,len(data.hardWordChoices)-1)
+            data.AIString = ""
+            data.AIStart = False
+            data.playerStart = False
     
     if data.startScreen == True and data.playScreen == True and data.timeRemaining<=0:
         if data.width*1/4<event.x<data.width*4.5/8 and data.height*7.5/10<event.y<data.height*8.5/10:
